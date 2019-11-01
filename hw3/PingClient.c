@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 	for(int i = 0; i < received_packets; i++){
 		if(rtt[i] > max_rtt){
 			max_rtt = rtt[i];
-			printf("%ls\n", max_rtt);
+//			printf("%ls\n", max_rtt);
 		}
 		if(rtt[i] < min_rtt){
 			min_rtt = rtt[i];
@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
 	}
 	double mean_rtt = total_rtt / received_packets;
 	int percentage = (((double)(received_packets)) / total_packets) * 100;
+	printf("%s", "---ping statistics---\n");
 	printf("%d packets transmitted, %d received, %d%% packet loss rtt min/avg/max = %lf %lf %lf ms\n", total_packets, received_packets, percentage, min_rtt, mean_rtt, max_rtt);
 
 	return 0;
