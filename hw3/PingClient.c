@@ -19,10 +19,10 @@ int main(int argc, char *argv[])
 	struct sockaddr_in server, from;
 	struct hostent *hp;
 	char buffer[128];
-	double rtt[10];
-	struct timeval tv;
-	tv.tv_sec = 0;
-	tv.tv_usec = 1000;
+	double rtt[10]; // store the rtt of each message
+	struct timeval tv; // timeout
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
 	if (argc != 3) { printf("Usage: server port\n");
 		exit(1);
 	}
@@ -60,10 +60,12 @@ int main(int argc, char *argv[])
 		n = recvfrom(sock,buffer,128,0,(struct sockaddr *)&from, &length);
 		
 		if (n < 0){
+			//timeout
 			loss_packets ++;
 			printf("Request timeout for icmp_seq %d\n", i);
 			
 		}else{
+			// calculate rtt
 			clock_gettime(CLOCK_MONOTONIC,&time_end);
 			double timeElapsed = ((double)(time_end.tv_nsec -
                                  time_start.tv_nsec))/1000000.0;
@@ -77,6 +79,7 @@ int main(int argc, char *argv[])
 	}
 	
 	close(sock);
+	// stats
 	double max_rtt = 0;
 	double total_rtt = 0;
 	double min_rtt = 100000000;
